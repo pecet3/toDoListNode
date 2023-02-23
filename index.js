@@ -34,7 +34,6 @@ const handleData = (type, title) => {
 
     const data = fs.readFileSync("data.json", "utf-8");
     const tasks = JSON.parse(data);
-    console.log(tasks);
 
     if (type === 1 || type === 2) {
         const isExisted = tasks.find(task => task.title === title) ? true : false;
@@ -49,6 +48,9 @@ const handleData = (type, title) => {
     switch (type) {
         case 1:
             console.log("Dodaje zadanie...".cyan);
+            const id = tasks.length + 1;
+            tasks.push({ id, title })
+            console.log(tasks);
             break;
         case 2:
             console.log("Usuwam zadanie...".cyan);
