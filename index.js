@@ -2,13 +2,11 @@ const parseArgs = require("minimist");
 const colors = require("colors");
 const fs = require("fs");
 
-
 const command = parseArgs(process.argv.slice(2, 3));
 delete command._
-console.log(command);
+
 
 const handleCommand = ({ add, remove, list }) => {
-    console.log(add, remove, list);
     if (add) {
         if (typeof add !== 'string') {
             return console.log("zadanie musi być w formie tekstu!".red);
@@ -45,21 +43,47 @@ const handleData = (type, title) => {
         }
     }
 
+    let dataJSON = "";
+
+    const getId = () => {
+        for (const i in tasks) {
+            tasks[i].id = i
+        }
+        dataJSON = JSON.stringify(tasks);
+        fs.writeFileSync("data.json", dataJSON);
+    }
+
     switch (type) {
         case 1:
-            console.log("Dodaje zadanie...".cyan);
-            const id = tasks.length + 1;
-            tasks.push({ id, title })
-            console.log(tasks);
+            console.log("Dodaje zadanie ".cyan + title.magenta);
+            const id = tasks.forEach(task => task.id === tasks.length + 1)
+            tasks.push({ id, title });
+            dataJSON = JSON.stringify(tasks);
+            fs.writeFileSync("data.json", dataJSON);
             break;
         case 2:
-            console.log("Usuwam zadanie...".cyan);
+            const index = tasks.findIndex(task => task.title === title);
+            tasks.splice(index, 1);
+            dataJSON = JSON.stringify(tasks);
+            fs.writeFile("data.json", dataJSON, "utf-8", (error) => {
+                if (error) throw error;
+                console.log("Usuwam zadanie ".cyan + title.magenta);
+            })
             break;
         case 3:
             console.log("Wyświetlam listę...".cyan);
+            console.log(``)
+            if (tasks.length) {
+                setTimeout(() => {
+                    tasks.forEach((task, index) => {
+                        if (index % 2) return console.log(`${task.id}. ${task.title}`.green);
+                        console.log(`${task.id}. ${task.title}`.yellow)
+                    })
+                }, 1000)
+            }
             break;
-
     }
+    getId();
 };
 
 handleCommand(command);
