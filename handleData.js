@@ -38,9 +38,9 @@ const handleData = (type, title) => {
             break;
         case 3:
             console.log("Wyświetlam listę...".cyan);
-            console.log(`Lista składa się z ${tasks.length} pozycji`.magenta)
             if (tasks.length) {
                 setTimeout(() => {
+                    console.log(`Lista składa się z ${tasks.length} pozycji:`.bgMagenta);
                     tasks.forEach((task, index) => {
                         if (index % 2) return console.log(`${task.id}. ${task.title}`.green);
                         console.log(`${task.id}. ${task.title}`.yellow)
